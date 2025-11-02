@@ -1,0 +1,5 @@
+* text=auto
+*.cs diff=csharp
+*.proto diff=protobuf
+*.sh text eol=lf
+*.ps1 text eol=crlf
