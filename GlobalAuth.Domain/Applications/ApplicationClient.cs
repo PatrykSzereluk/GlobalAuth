@@ -10,8 +10,6 @@ namespace GlobalAuth.Domain.Applications
         public string ClientSecretHash { get; set; } = default!;
         public ApplicationClientType ClientType { get; set; }
         public ApplicationClientStatus Status { get; set; } = ApplicationClientStatus.Active;
-
-        // Relacje
         public ICollection<UserApplication> UserApplications { get; set; } = new List<UserApplication>();
     }
 }

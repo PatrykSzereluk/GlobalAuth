@@ -10,7 +10,6 @@ namespace GlobalAuth.Domain.Users
         public string Token { get; set; } = default!;
         public DateTime ExpiresAtUtc { get; set; }
         public bool IsUsed { get; set; }
-
         public bool IsExpired() => DateTime.UtcNow > ExpiresAtUtc;
     }
 }
