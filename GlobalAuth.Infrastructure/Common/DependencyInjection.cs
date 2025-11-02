@@ -2,6 +2,8 @@
 using GlobalAuth.Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using GlobalAuth.Infrastructure.Data.Repositories;
+using GlobalAuth.Application.Abstraction.Repositories;
 
 namespace GlobalAuth.Infrastructure.Common
 {
@@ -12,6 +14,8 @@ namespace GlobalAuth.Infrastructure.Common
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AuthDbContext>(options =>
                 options.UseSqlite(connectionString));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

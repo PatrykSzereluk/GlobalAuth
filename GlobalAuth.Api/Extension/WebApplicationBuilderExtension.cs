@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace GlobalAuth.Api.Common
+namespace GlobalAuth.Api.Extension
 {
     public static class WebApplicationBuilderExtension
     {

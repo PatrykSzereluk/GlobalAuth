@@ -1,7 +1,7 @@
-﻿using GlobalAuth.Domain.Applications;
+﻿using GlobalAuth.Domain.Users;
 using GlobalAuth.Domain.Tokens;
-using GlobalAuth.Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using GlobalAuth.Domain.Applications;
 
 namespace GlobalAuth.Infrastructure.Data
 {

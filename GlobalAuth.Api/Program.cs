@@ -1,7 +1,7 @@
 using Serilog;
+using GlobalAuth.Api.Extension;
 using GlobalAuth.Application.Common;
 using GlobalAuth.Infrastructure.Common;
-using GlobalAuth.Api.Common;
 
 namespace GlobalAuth.Api
 {
