@@ -16,7 +16,7 @@ namespace GlobalAuth.Domain.Users
             set
             {
                 _email = value;
-                _normalizedEmail = value?.Trim().ToUpperInvariant() ?? string.Empty;
+                _normalizedEmail = NormalizeEmail(value) ?? string.Empty;
             }
         }
 
@@ -34,7 +34,10 @@ namespace GlobalAuth.Domain.Users
         public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
         public DateTime? LastLoginUtc { get; set; }
         public DateTime? LockedUntilUtc { get; set; }
-        public ICollection<UserApplication> UserApplications { get; set; } = new List<UserApplication>();
-        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public ICollection<UserApplication> UserApplications { get; set; } = [];
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
+
+        public static string NormalizeEmail(string email)
+            => email.Trim().ToUpperInvariant();
     }
 }

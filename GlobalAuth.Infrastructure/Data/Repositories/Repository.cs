@@ -30,6 +30,11 @@ namespace GlobalAuth.Infrastructure.Data.Repositories
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
+        public async Task<T?> FindAsyncFirstOrDefault(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).FirstOrDefaultAsync();
+        }
+
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);

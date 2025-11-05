@@ -1,41 +1,49 @@
 using Serilog;
 using GlobalAuth.Api.Extension;
-using GlobalAuth.Application.Common;
-using GlobalAuth.Infrastructure.Common;
+using GlobalAuth.Infrastructure.Data;
 
-namespace GlobalAuth.Api
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddSerilog();
+
+builder.Services.AddRedis(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
+builder.Services
+    .AddSQLite(builder.Configuration)
+    .AddLocalizations()
+    .AddMediatR()
+    .AddJWTOptions(builder.Configuration)
+    .AddCustomServices();
+
+var app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+if (app.Environment.IsDevelopment())
 {
-    public class Program
+    using (var scope = app.Services.CreateScope())
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.AddSerilog();
-
-            builder.Services
-                .AddApplication()
-                .AddInfrastructure(builder.Configuration);
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
-        }
+        await AuthDbSeeder.SeedAsync(scope.ServiceProvider);
     }
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseLocalization();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

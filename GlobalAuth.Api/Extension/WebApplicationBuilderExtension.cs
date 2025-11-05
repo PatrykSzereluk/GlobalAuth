@@ -1,4 +1,16 @@
-﻿using Serilog;
+﻿using GlobalAuth.Api.Common;
+using GlobalAuth.Application.Abstraction;
+using GlobalAuth.Application.Abstraction.JWT;
+using GlobalAuth.Application.Abstraction.Repositories;
+using GlobalAuth.Application.Common;
+using GlobalAuth.Infrastructure.Data;
+using GlobalAuth.Infrastructure.Data.Repositories;
+using GlobalAuth.Infrastructure.Services;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using StackExchange.Redis;
+using System.Globalization;
 
 namespace GlobalAuth.Api.Extension
 {
@@ -14,6 +26,75 @@ namespace GlobalAuth.Api.Extension
                 .CreateLogger();
 
             builder.Host.UseSerilog();
+        }
+
+        public static IServiceCollection AddCustomServices(this IServiceCollection services)
+        {
+            services.AddSingleton<ILocalizationService, LocalizationService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            services.AddScoped<IRequestContextService, RequestContextService>();
+
+            return services;
+        }
+        public static IServiceCollection AddJWTOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+
+            return services;
+        }
+
+        public static IServiceCollection AddLocalizations(this IServiceCollection services)
+        {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            var supportedCultures = new[]
+            {
+                new CultureInfo("en"),
+                new CultureInfo("pl")
+            };
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new AcceptLanguageHeaderRequestCultureProvider(),
+                    new QueryStringRequestCultureProvider(),
+                };
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddSQLite(this IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AuthDbContext>(options =>
+                options.UseSqlite(connectionString));
+
+            return services;
+        }
+
+        public static IServiceCollection AddMediatR(this IServiceCollection services)
+        {
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly));
+
+            return services;
+        }
+        
+        public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
+        {
+            var redisConnection = configuration.GetSection("Redis:ConnectionString").Value;
+            
+            services.AddSingleton<IConnectionMultiplexer>(_ =>
+                ConnectionMultiplexer.Connect(redisConnection!));
+
+            return services;
         }
     }
 }
