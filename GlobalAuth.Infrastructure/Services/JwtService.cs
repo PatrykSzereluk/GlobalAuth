@@ -30,8 +30,8 @@ namespace GlobalAuth.Infrastructure.Services
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.Role.ToString()),
-                new("client_id", clientId ?? "unknown"),
-                new("application_name", applicationName ?? "unknown")
+                new(ClaimsTypes.ClientId, clientId ?? Const.Unknown),
+                new(ClaimsTypes.AplicationName, applicationName ?? Const.Unknown)
             };
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

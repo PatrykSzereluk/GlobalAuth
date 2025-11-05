@@ -1,4 +1,6 @@
-﻿namespace GlobalAuth.Api.Common
+﻿using GlobalAuth.Application.Common;
+
+namespace GlobalAuth.Api.Common
 {
     public class RequestContextService : IRequestContextService
     {
@@ -13,26 +15,30 @@
         {
             var context = _httpContextAccessor.HttpContext;
             if (context == null)
-                return "unknown";
+                return Const.Unknown;
 
-            var forwarded = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            var forwarded = context.Request.Headers[RequestHeaders.XForwardedFor].FirstOrDefault();
             if (!string.IsNullOrEmpty(forwarded))
                 return forwarded.Split(',').First().Trim();
 
-            return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            var realIp = context.Request.Headers[RequestHeaders.XRealIP].FirstOrDefault();
+            if (!string.IsNullOrEmpty(realIp))
+                return realIp;
+
+            return context.Connection.RemoteIpAddress?.ToString() ?? Const.Unknown;
         }
 
         public string GetUserAgent()
         {
             var context = _httpContextAccessor.HttpContext;
-            return context?.Request.Headers["User-Agent"].FirstOrDefault() ?? "unknown";
+            return context?.Request.Headers[RequestHeaders.UserAgent].FirstOrDefault() ?? Const.Unknown;
         }
 
         public string GetDeviceDescription()
         {
             var ua = GetUserAgent();
-            if (ua == "unknown")
-                return "Unknown device";
+            if (ua == Const.Unknown)
+                return Const.UnknownDevice;
 
             if (ua.Contains("Windows", StringComparison.OrdinalIgnoreCase))
                 return "Windows PC";
@@ -45,7 +51,7 @@
             if (ua.Contains("iPad", StringComparison.OrdinalIgnoreCase))
                 return "iPad";
 
-            return "Other Device";
+            return Const.OtherDevice;
         }
     }
 }

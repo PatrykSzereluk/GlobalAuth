@@ -126,6 +126,9 @@
   <data name="Error_AppDoesNotExists" xml:space="preserve">
     <value>Application '{0}' doesn't exists.</value>
   </data>
+  <data name="Error_AppDoesntExists2" xml:space="preserve">
+    <value>Application doesn't exists.</value>
+  </data>
   <data name="Error_AppInactive" xml:space="preserve">
     <value>Application not available.</value>
   </data>
@@ -138,10 +141,22 @@
   <data name="Error_InvalidCredentials" xml:space="preserve">
     <value>Invalid credentials.</value>
   </data>
+  <data name="Error_RefreshTokenDoesntExists" xml:space="preserve">
+    <value>Refresh token doesn't exists or revoked.</value>
+  </data>
+  <data name="Error_UserDoesntExists" xml:space="preserve">
+    <value>User doesn't exists.</value>
+  </data>
   <data name="Error_UserEmailExsists" xml:space="preserve">
     <value>User with this email exists.</value>
   </data>
+  <data name="Success_AllLogout" xml:space="preserve">
+    <value>All user sessions logged out.</value>
+  </data>
   <data name="Success_RegisterUser" xml:space="preserve">
     <value>User registered successfully.</value>
+  </data>
+  <data name="Success_SingleLogout" xml:space="preserve">
+    <value>Session logged out successfully.</value>
   </data>
 </root>

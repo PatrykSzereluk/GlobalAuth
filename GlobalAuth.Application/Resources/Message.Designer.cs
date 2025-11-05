@@ -88,6 +88,15 @@ namespace GlobalAuth.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application doesn&apos;t exists..
+        /// </summary>
+        public static string Error_AppDoesntExists2 {
+            get {
+                return ResourceManager.GetString("Error_AppDoesntExists2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Application not available..
         /// </summary>
         public static string Error_AppInactive {
@@ -124,6 +133,24 @@ namespace GlobalAuth.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh token doesn&apos;t exists or revoked..
+        /// </summary>
+        public static string Error_RefreshTokenDoesntExists {
+            get {
+                return ResourceManager.GetString("Error_RefreshTokenDoesntExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User doesn&apos;t exists..
+        /// </summary>
+        public static string Error_UserDoesntExists {
+            get {
+                return ResourceManager.GetString("Error_UserDoesntExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User with this email exists..
         /// </summary>
         public static string Error_UserEmailExsists {
@@ -133,11 +160,29 @@ namespace GlobalAuth.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All user sessions logged out..
+        /// </summary>
+        public static string Success_AllLogout {
+            get {
+                return ResourceManager.GetString("Success_AllLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User registered successfully..
         /// </summary>
         public static string Success_RegisterUser {
             get {
                 return ResourceManager.GetString("Success_RegisterUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session logged out successfully..
+        /// </summary>
+        public static string Success_SingleLogout {
+            get {
+                return ResourceManager.GetString("Success_SingleLogout", resourceCulture);
             }
         }
     }

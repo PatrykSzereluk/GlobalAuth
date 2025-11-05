@@ -1,16 +1,16 @@
-﻿using GlobalAuth.Api.Common;
-using GlobalAuth.Application.Abstraction;
-using GlobalAuth.Application.Abstraction.JWT;
-using GlobalAuth.Application.Abstraction.Repositories;
-using GlobalAuth.Application.Common;
-using GlobalAuth.Infrastructure.Data;
-using GlobalAuth.Infrastructure.Data.Repositories;
-using GlobalAuth.Infrastructure.Services;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+﻿using Serilog;
 using StackExchange.Redis;
 using System.Globalization;
+using GlobalAuth.Api.Common;
+using GlobalAuth.Application.Common;
+using Microsoft.EntityFrameworkCore;
+using GlobalAuth.Infrastructure.Data;
+using Microsoft.AspNetCore.Localization;
+using GlobalAuth.Infrastructure.Services;
+using GlobalAuth.Application.Abstraction;
+using GlobalAuth.Application.Abstraction.JWT;
+using GlobalAuth.Infrastructure.Data.Repositories;
+using GlobalAuth.Application.Abstraction.Repositories;
 
 namespace GlobalAuth.Api.Extension
 {

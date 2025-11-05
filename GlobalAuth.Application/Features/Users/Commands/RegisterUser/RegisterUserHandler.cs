@@ -76,7 +76,7 @@ namespace GlobalAuth.Application.Features.Users.Commands.RegisterUser
 
             await _unitOfWork.SaveChangesAsync();
 
-            return ApiResponse<string>.Ok("User registered successfully.");
+            return ApiResponse<string>.Ok(_localizer["Success_RegisterUser"]);
         }
     }
 }

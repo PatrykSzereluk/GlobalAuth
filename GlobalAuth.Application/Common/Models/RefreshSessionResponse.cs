@@ -1,6 +1,6 @@
 ﻿namespace GlobalAuth.Application.Common.DTOs
 {
-    public record RefreshSessionDto(
+    public record RefreshSessionResponse(
         string Token,
         string Device,
         string IpAddress,
