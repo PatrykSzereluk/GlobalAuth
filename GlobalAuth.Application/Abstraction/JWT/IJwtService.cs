@@ -4,6 +4,6 @@ namespace GlobalAuth.Application.Abstraction.JWT
 {
     public interface IJwtService
     {
-        string GenerateAccessToken(User user, string? clientId = null, string? applicationName = null);
+        string GenerateAccessToken(User user, Guid clientId, string? applicationName = null);
     }
 }

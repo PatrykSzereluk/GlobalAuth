@@ -44,7 +44,7 @@ namespace GlobalAuth.Application.Features.Users.Commands.RefreshToken
                 request.UserAgent
             );
 
-            var newAccessToken = _jwtService.GenerateAccessToken(user, appClient.ClientId, appClient.Name);
+            var newAccessToken = _jwtService.GenerateAccessToken(user, appClient.Id, appClient.Name);
 
             var result = new AuthResultDto
             {

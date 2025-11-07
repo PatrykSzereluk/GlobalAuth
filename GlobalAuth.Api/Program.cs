@@ -21,7 +21,9 @@ builder.Services
     .AddLocalizations()
     .AddMediatR()
     .AddJWTOptions(builder.Configuration)
+    .AddCustomRateLimiterOptions(builder.Configuration)
     .AddCustomServices();
+
 
 var app = builder.Build();
 
@@ -39,6 +41,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseLocalization();
+
+app.RegisterMiddlewares();
 
 app.UseHttpsRedirection();
 

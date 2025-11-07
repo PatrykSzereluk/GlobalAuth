@@ -1,16 +1,17 @@
-﻿using Serilog;
-using StackExchange.Redis;
-using System.Globalization;
-using GlobalAuth.Api.Common;
-using GlobalAuth.Application.Common;
-using Microsoft.EntityFrameworkCore;
-using GlobalAuth.Infrastructure.Data;
-using Microsoft.AspNetCore.Localization;
-using GlobalAuth.Infrastructure.Services;
+﻿using GlobalAuth.Api.Common;
 using GlobalAuth.Application.Abstraction;
 using GlobalAuth.Application.Abstraction.JWT;
-using GlobalAuth.Infrastructure.Data.Repositories;
 using GlobalAuth.Application.Abstraction.Repositories;
+using GlobalAuth.Application.Common;
+using GlobalAuth.Application.Common.RateLimiter;
+using GlobalAuth.Infrastructure.Data;
+using GlobalAuth.Infrastructure.Data.Repositories;
+using GlobalAuth.Infrastructure.Services;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using StackExchange.Redis;
+using System.Globalization;
 
 namespace GlobalAuth.Api.Extension
 {
@@ -31,6 +32,7 @@ namespace GlobalAuth.Api.Extension
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             services.AddSingleton<ILocalizationService, LocalizationService>();
+            services.AddScoped<ICustomRateLimiter, CustomRateLimiter>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
@@ -38,9 +40,17 @@ namespace GlobalAuth.Api.Extension
 
             return services;
         }
+
         public static IServiceCollection AddJWTOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+
+            return services;
+        }
+
+        public static IServiceCollection AddCustomRateLimiterOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<RateLimitRule>(configuration.GetSection("RateLimiter"));
 
             return services;
         }

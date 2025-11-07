@@ -70,7 +70,7 @@ namespace GlobalAuth.Application.Features.Users.Commands.LoginUser
             if (!alreadyLinked.IsEnabled)
                 return ApiResponse<AuthResultDto>.Fail(_localizer["Error_BlockedAccount"]);
 
-            var accessToken = _jwtService.GenerateAccessToken(user, appClient.ClientId, appClient.Name);
+            var accessToken = _jwtService.GenerateAccessToken(user, appClient.Id, appClient.Name);
 
             var refreshToken = await _refreshTokenService.GenerateAsync(
                 user.Id,
