@@ -28,5 +28,9 @@
         public static readonly string XForwardedFor = "X-Forwarded-For";
         public static readonly string XRealIP = "X-Real-IP";
         public static readonly string UserAgent = "User-Agent";
+        public static readonly string XRateLimitLimit = "X-RateLimit-Limit";
+        public static readonly string XRateLimitRemaining = "X-RateLimit-Remaining";
+        public static readonly string XRateLimitReset = "X-RateLimit-Reset";
+        public static readonly string RetryAfter = "Retry-After";
     }
 }

@@ -22,6 +22,7 @@ builder.Services
     .AddMediatR()
     .AddJWTOptions(builder.Configuration)
     .AddCustomRateLimiterOptions(builder.Configuration)
+    .AddVerificationCodesOptions(builder.Configuration)
     .AddCustomServices();
 
 

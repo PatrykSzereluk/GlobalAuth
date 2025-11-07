@@ -40,7 +40,7 @@ namespace GlobalAuth.Infrastructure.Services
 
             var allowed = count <= rule.Limit;
             var remaining = allowed ? (rule.Limit - count) : 0;
-            var retryAfter = allowed ? 0 : Math.Max(ttl, 0);
+            var retryAfter = ttl;
 
             return new RateLimitResult
             {
@@ -61,13 +61,12 @@ namespace GlobalAuth.Infrastructure.Services
 
             var allowed = c < rule.Limit;
             var remaining = allowed ? (rule.Limit - c) : 0;
-            var retryAfter = allowed ? 0 : Math.Max(t, 0);
 
             return new RateLimitResult
             {
                 Allowed = allowed,
                 Remaining = remaining,
-                RetryAfterSeconds = retryAfter,
+                RetryAfterSeconds = t,
                 CurrentCount = c
             };
         }

@@ -4,6 +4,7 @@ using GlobalAuth.Application.Abstraction.JWT;
 using GlobalAuth.Application.Abstraction.Repositories;
 using GlobalAuth.Application.Common;
 using GlobalAuth.Application.Common.RateLimiter;
+using GlobalAuth.Application.Common.VerificationOptions;
 using GlobalAuth.Infrastructure.Data;
 using GlobalAuth.Infrastructure.Data.Repositories;
 using GlobalAuth.Infrastructure.Services;
@@ -37,6 +38,7 @@ namespace GlobalAuth.Api.Extension
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IRequestContextService, RequestContextService>();
+            services.AddScoped<IVerificationCodeService, VerificationCodeService>();
 
             return services;
         }
@@ -50,7 +52,14 @@ namespace GlobalAuth.Api.Extension
 
         public static IServiceCollection AddCustomRateLimiterOptions(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<RateLimitRule>(configuration.GetSection("RateLimiter"));
+            services.Configure<RateLimitOptions>(configuration.GetSection("RateLimiter"));
+
+            return services;
+        }
+
+        public static IServiceCollection AddVerificationCodesOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<VerificationCodeOption>(configuration.GetSection("VerificationCodes"));
 
             return services;
         }
