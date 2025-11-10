@@ -1,8 +1,9 @@
 ﻿using System.Text.Json;
 using StackExchange.Redis;
+using GlobalAuth.Domain.Enums;
 using GlobalAuth.Domain.Tokens;
-using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
 using GlobalAuth.Application.Abstraction;
 using GlobalAuth.Application.Common.VerificationOptions;
 
@@ -16,10 +17,10 @@ namespace GlobalAuth.Infrastructure.Services
         public VerificationCodeService(IConnectionMultiplexer connection, IOptions<VerificationCodeOption> codes)
         {
             _redis = connection.GetDatabase();
-            _verificationCodeModel = codes.Value.VerificationCodes.Where(t => t.Name == "Email").FirstOrDefault()!;
+            _verificationCodeModel = codes.Value.VerificationCodes.Where(t => t.Name == "EmailConfirmation").FirstOrDefault()!;
         }
 
-        private static string Key(Guid userId, string purpose, string code)
+        private static string Key(Guid userId, UserTokenPurpose purpose, string code)
             => $"verify:{userId}:{purpose}:{code}";
 
         private static string GenerateNumericCode(int digits)
@@ -31,7 +32,7 @@ namespace GlobalAuth.Infrastructure.Services
             return value.ToString($"D{digits}");
         }
 
-        public async Task<string> GenerateAsync(Guid userId, string purpose)
+        public async Task<string> GenerateAsync(Guid userId, UserTokenPurpose purpose)
         {
             var code = GenerateNumericCode(_verificationCodeModel.DigitLength);
             var entity = new VerificationCode
@@ -50,12 +51,12 @@ namespace GlobalAuth.Infrastructure.Services
             return code;
         }
 
-        public async Task InvalidateAsync(Guid userId, string purpose, string code)
+        public async Task InvalidateAsync(Guid userId, UserTokenPurpose purpose, string code)
         {
             await _redis.KeyDeleteAsync(Key(userId, purpose, code));
         }
 
-        public async Task<bool> ValidateAsync(Guid userId, string purpose, string code)
+        public async Task<bool> ValidateAsync(Guid userId, UserTokenPurpose purpose, string code)
         {
             var key = Key(userId, purpose, code);
             var value = await _redis.StringGetAsync(key);

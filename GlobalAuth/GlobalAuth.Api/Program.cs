@@ -23,6 +23,7 @@ builder.Services
     .AddJWTOptions(builder.Configuration)
     .AddCustomRateLimiterOptions(builder.Configuration)
     .AddVerificationCodesOptions(builder.Configuration)
+    .AddRabbitMQOptions(builder.Configuration)
     .AddCustomServices();
 
 

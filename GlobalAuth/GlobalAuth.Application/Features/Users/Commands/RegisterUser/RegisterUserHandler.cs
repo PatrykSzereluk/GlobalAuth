@@ -1,10 +1,11 @@
-﻿using MediatR;
-using GlobalAuth.Domain.Enums;
-using GlobalAuth.Domain.Users;
+﻿using GlobalAuth.Application.Abstraction;
+using GlobalAuth.Application.Abstraction.Rabbit;
+using GlobalAuth.Application.Abstraction.Repositories;
 using GlobalAuth.Application.Common;
 using GlobalAuth.Domain.Applications;
-using GlobalAuth.Application.Abstraction;
-using GlobalAuth.Application.Abstraction.Repositories;
+using GlobalAuth.Domain.Enums;
+using GlobalAuth.Domain.Users;
+using MediatR;
 
 namespace GlobalAuth.Application.Features.Users.Commands.RegisterUser
 {
@@ -12,11 +13,16 @@ namespace GlobalAuth.Application.Features.Users.Commands.RegisterUser
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILocalizationService _localizer;
+        private readonly IMessageBus _messageBus;
+        private readonly IVerificationCodeService _verificationCodeService;
 
-        public RegisterUserHandler(IUnitOfWork unitOfWork, ILocalizationService localizer)
+
+        public RegisterUserHandler(IUnitOfWork unitOfWork, ILocalizationService localizer, IMessageBus messageBus, IVerificationCodeService verificationCodeService)
         {
             _unitOfWork = unitOfWork;
             _localizer = localizer;
+            _messageBus = messageBus;
+            _verificationCodeService = verificationCodeService;
         }
 
         public async Task<ApiResponse<string>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -73,6 +79,10 @@ namespace GlobalAuth.Application.Features.Users.Commands.RegisterUser
                 ApplicationClientId = appClient.Id,
                 IsEnabled = true
             });
+
+            var code = await _verificationCodeService.GenerateAsync(user.Id, UserTokenPurpose.EmailVerification);
+
+            await _messageBus.PublishAsync("notifications", "notifications.email", code);
 
             await _unitOfWork.SaveChangesAsync();
 

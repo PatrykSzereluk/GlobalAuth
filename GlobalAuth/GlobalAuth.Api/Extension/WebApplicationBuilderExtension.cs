@@ -1,18 +1,20 @@
-﻿using GlobalAuth.Api.Common;
-using GlobalAuth.Application.Abstraction;
-using GlobalAuth.Application.Abstraction.JWT;
-using GlobalAuth.Application.Abstraction.Repositories;
-using GlobalAuth.Application.Common;
-using GlobalAuth.Application.Common.RateLimiter;
-using GlobalAuth.Application.Common.VerificationOptions;
-using GlobalAuth.Infrastructure.Data;
-using GlobalAuth.Infrastructure.Data.Repositories;
-using GlobalAuth.Infrastructure.Services;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+﻿using Serilog;
 using StackExchange.Redis;
 using System.Globalization;
+using GlobalAuth.Api.Common;
+using GlobalAuth.Application.Common;
+using Microsoft.EntityFrameworkCore;
+using GlobalAuth.Infrastructure.Data;
+using Microsoft.AspNetCore.Localization;
+using GlobalAuth.Infrastructure.Services;
+using GlobalAuth.Application.Abstraction;
+using GlobalAuth.Infrastructure.Messaging;
+using GlobalAuth.Application.Abstraction.JWT;
+using GlobalAuth.Application.Common.RateLimiter;
+using GlobalAuth.Application.Abstraction.Rabbit;
+using GlobalAuth.Infrastructure.Data.Repositories;
+using GlobalAuth.Application.Abstraction.Repositories;
+using GlobalAuth.Application.Common.VerificationOptions;
 
 namespace GlobalAuth.Api.Extension
 {
@@ -33,6 +35,7 @@ namespace GlobalAuth.Api.Extension
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             services.AddSingleton<ILocalizationService, LocalizationService>();
+            services.AddSingleton<IMessageBus, MessageBus>();
             services.AddScoped<ICustomRateLimiter, CustomRateLimiter>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IJwtService, JwtService>();
@@ -53,6 +56,13 @@ namespace GlobalAuth.Api.Extension
         public static IServiceCollection AddCustomRateLimiterOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<RateLimitOptions>(configuration.GetSection("RateLimiter"));
+
+            return services;
+        }
+
+        public static IServiceCollection AddRabbitMQOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<RabbitOptions>(configuration.GetSection("RabbitMQ"));
 
             return services;
         }
