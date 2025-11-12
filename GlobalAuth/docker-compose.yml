@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  # =======================
+  # GlobalAuth API
+  # =======================
+  globalauth:
+    image: globalauth-api:latest
+    container_name: globalauth
+    build:
+      context: .
+      dockerfile: GlobalAuth.Api/Dockerfile
+    ports:
+      - "8080:8080"                     # http://localhost:8080/swagger/index.html
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__Default: "Data Source=/app/Database/globalauth.db"
+      Redis__ConnectionString: "globalauth-redis:6379"
+      Rabbit__HostName: "rabbitmq"
+      Rabbit__UserName: "guest"
+      Rabbit__Password: "guest"
+      Jwt__Issuer: "GlobalAuth"
+      Jwt__Audience: "frontapi"
+      Jwt__Key: "asdsad_q2434_ASFDMKLDIFOJI8443ASDBYDSDFGDGFGDSD"
+      Jwt__ExpirationMinutes: 60
+    volumes:
+      - ga_data:/app/Database
+    depends_on:
+      - redis
+      - rabbitmq
+    networks:
+      - ga-net
+
+  # =======================
+  # Redis
+  # =======================
+  redis:
+    image: redis:7
+    container_name: globalauth-redis
+    restart: unless-stopped
+    ports:
+      - "5002:6379"
+    networks:
+      - ga-net
+
+  # =======================
+  # RabbitMQ
+  # =======================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "15672:15672"                   # panel zarządzania
+      - "5672:5672"                     
+    networks:
+      - ga-net
+networks:
+  ga-net:
+    driver: bridge
+
+volumes:
+  ga_data:

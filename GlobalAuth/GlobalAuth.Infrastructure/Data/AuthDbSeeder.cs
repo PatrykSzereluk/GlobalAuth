@@ -46,6 +46,14 @@ namespace GlobalAuth.Infrastructure.Data
                         ClientSecretHash = BCrypt.Net.BCrypt.HashPassword("internal-secret"),
                         ClientType = ApplicationClientType.Service,
                         Status = ApplicationClientStatus.Active
+                    },
+                    new()
+                    {
+                        Name = "string-test-only",
+                        ClientId = "string",
+                        ClientSecretHash = BCrypt.Net.BCrypt.HashPassword("string-secret"),
+                        ClientType = ApplicationClientType.UserFacing,
+                        Status = ApplicationClientStatus.Active
                     }
                 };
 
@@ -66,10 +74,20 @@ namespace GlobalAuth.Infrastructure.Data
                     IsEmailConfirmed = true
                 };
 
-                await context.Users.AddAsync(admin);
+                var admin2 = new User
+                {
+                    Email = "string",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("string"),
+                    Role = UserRole.SuperAdmin,
+                    IsActive = true,
+                    IsEmailConfirmed = true
+                };
+
+                await context.Users.AddRangeAsync(admin, admin2);
                 await context.SaveChangesAsync();
 
                 var webApp = await context.ApplicationClients.FirstAsync(c => c.ClientId == "web-app");
+                var webApp2 = await context.ApplicationClients.FirstAsync(c => c.ClientId == "string");
 
                 var userApp = new UserApplication
                 {
@@ -78,7 +96,14 @@ namespace GlobalAuth.Infrastructure.Data
                     IsEnabled = true
                 };
 
-                await context.UserApplications.AddAsync(userApp);
+                var userApp2 = new UserApplication
+                {
+                    UserId = admin2.Id,
+                    ApplicationClientId = webApp2.Id,
+                    IsEnabled = true
+                };
+
+                await context.UserApplications.AddRangeAsync(userApp, userApp2);
                 await context.SaveChangesAsync();
             }
 

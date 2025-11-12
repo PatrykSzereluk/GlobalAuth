@@ -1,9 +1,9 @@
-﻿using GlobalAuth.Application.Abstraction;
+﻿using System.Net;
+using Microsoft.Extensions.Options;
 using GlobalAuth.Application.Common;
+using GlobalAuth.Application.Abstraction;
 using GlobalAuth.Application.Common.RateLimiter;
 using GlobalAuth.Application.Common.VerificationOptions;
-using Microsoft.Extensions.Options;
-using System.Net;
 
 namespace GlobalAuth.Api.Middlewares
 {
